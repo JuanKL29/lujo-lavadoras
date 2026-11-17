@@ -2,6 +2,13 @@
 
 Landing page + panel de administración para alquilar lavadoras. Proyecto universitario, ligero y sin librerías de UI.
 
+**Repositorio:** <https://github.com/JuanKL29/lujo-lavadoras> (privado)
+
+```bash
+git clone https://github.com/JuanKL29/lujo-lavadoras.git
+cd lujo-lavadoras
+```
+
 La página pública es directa: hero con la propuesta de valor, botón de WhatsApp para agendar el alquiler, servicios, comentarios de clientes con calificación por estrellas, información de la empresa y contacto. No muestra catálogo ni formulario de alquiler: toda la conversación de alquiler se hace por WhatsApp. El panel de administración sigue disponible para gestionar lavadoras, alquileres, órdenes, clientes, servicios y los comentarios que se publican.
 
 - **Frontend:** Angular 22 (standalone, signals, lazy loading).
@@ -20,7 +27,8 @@ La página pública es directa: hero con la propuesta de valor, botón de WhatsA
 > Consulta [`docs/ARRANQUE-AUTOMATICO.md`](docs/ARRANQUE-AUTOMATICO.md) para los
 > accesos directos, el guardián y la solución de problemas.
 
-Credenciales de MySQL usadas por defecto (archivo `backend/.env`):
+Credenciales de MySQL usadas por defecto (archivo `backend/.env`, que se crea a
+partir de `backend/.env.example`):
 
 ```
 DB_HOST=127.0.0.1
@@ -29,6 +37,9 @@ DB_USER=root
 DB_PASSWORD=
 DB_NAME=lavadoras
 ```
+
+> El archivo `backend/.env` no está en el repositorio porque guarda credenciales.
+> Cópialo de `backend/.env.example` y ajusta los valores de tu equipo.
 
 ---
 
@@ -43,6 +54,19 @@ npm install
 cd ../frontend
 npm install
 ```
+
+### Base de datos
+
+Crea la base `lavadoras` y sus tablas ejecutando los scripts de `database/` en
+este orden:
+
+```bash
+mysql -u root -p < database/01_esquema.sql
+mysql -u root -p < database/02_datos.sql
+```
+
+También se pueden importar desde phpMyAdmin o MySQL Workbench. El detalle está
+en [`database/README.md`](database/README.md).
 
 ### Datos de ejemplo (opcional)
 
