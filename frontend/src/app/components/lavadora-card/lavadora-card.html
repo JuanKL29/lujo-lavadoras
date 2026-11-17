@@ -1,0 +1,37 @@
+<article class="machine">
+  <div class="machine-media">
+    <span [class]="'badge ' + estadoClase(lavadora().estado)">
+      {{ lavadora().estado }}
+    </span>
+    <img
+      [src]="imagen()"
+      [alt]="lavadora().marca + ' ' + lavadora().modelo"
+      width="480"
+      height="360"
+      loading="lazy"
+      decoding="async"
+      (error)="usarRespaldo()"
+    />
+  </div>
+
+  <div class="machine-body">
+    <p class="machine-brand">{{ lavadora().marca }}</p>
+    <h3>{{ lavadora().modelo }}</h3>
+    <p class="machine-ref">Ref. {{ lavadora().referencia }}</p>
+
+    <div class="machine-foot">
+      <p class="machine-price">
+        <strong>{{ lavadora().precio_alquiler | money }}</strong>
+        <span>/ mes</span>
+      </p>
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        [disabled]="!disponible()"
+        (click)="alquilar.emit(lavadora())"
+      >
+        {{ disponible() ? 'Alquilar' : 'No disponible' }}
+      </button>
+    </div>
+  </div>
+</article>

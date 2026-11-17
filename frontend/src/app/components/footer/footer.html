@@ -1,0 +1,46 @@
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" routerLink="/" aria-label="Lujo Lavadoras">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="3.5" y="2.5" width="25" height="27" rx="6" stroke="currentColor" stroke-width="1.7" />
+            <circle cx="16" cy="18" r="7" stroke="currentColor" stroke-width="1.7" />
+            <circle cx="16" cy="18" r="3" fill="currentColor" />
+            <circle cx="9.5" cy="7.5" r="1.4" fill="currentColor" />
+            <path d="M21 7.5h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+        </span>
+        <span class="brand-name">Lujo<span>Lavadoras</span></span>
+      </a>
+      <p>Alquila la lavadora que necesitas, el tiempo que necesitas. Sin comprar, sin complicaciones.</p>
+    </div>
+
+    <div>
+      <h4>Navegación</h4>
+      <ul>
+        <li><a routerLink="/" fragment="inicio">Inicio</a></li>
+        <li><a routerLink="/" fragment="servicios">Servicios</a></li>
+        <li><a routerLink="/" fragment="acerca-de">Acerca de</a></li>
+        <li><a routerLink="/" fragment="contacto">Contacto</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Contacto</h4>
+      <ul>
+        <li>
+          <a [href]="whatsapp" target="_blank" rel="noopener">{{ whatsappDisplay }}</a>
+        </li>
+        <li><a href="juan29021117@gmail.com">juan29021117@gmail.com</a></li>
+        <li>Cúcuta, Colombia</li>
+        <li>Lunes a sábado · 8:00 am a 6:00 pm</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <span>© {{ anio }} Lujo Lavadoras</span>
+    <span>Hecho en Colombia</span>
+  </div>
+</footer>

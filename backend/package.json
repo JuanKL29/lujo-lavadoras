@@ -1,0 +1,20 @@
+{
+  "name": "lujo-lavadoras-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "API REST para el alquiler de lavadoras",
+  "scripts": {
+    "dev": "node --watch --watch-path=src --env-file=.env src/server.js",
+    "start": "node --env-file=.env src/server.js",
+    "setup": "node --env-file=.env src/setup.js",
+    "seed": "node --env-file=.env src/seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.3"
+  }
+}

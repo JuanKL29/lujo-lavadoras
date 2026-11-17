@@ -1,0 +1,938 @@
+{
+  "info": {
+    "name": "Lujo Lavadoras - Demo HTTP",
+    "description": "Demostración de GET, POST, PUT, PATCH y DELETE contra la API de Lujo Lavadoras. Ejecuta las carpetas en orden: 1, 2, 3, 4, 5 y 6.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:3000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "idLavadora",
+      "value": ""
+    },
+    {
+      "key": "idServicio",
+      "value": ""
+    },
+    {
+      "key": "idAlquiler",
+      "value": ""
+    },
+    {
+      "key": "idOrden",
+      "value": ""
+    },
+    {
+      "key": "cedula",
+      "value": "1099887766"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. GET - Lectura",
+      "item": [
+        {
+          "name": "Health - GET /api/health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/health",
+            "description": "Comprueba que el backend y MySQL estén respondiendo."
+          }
+        },
+        {
+          "name": "Listar lavadoras - GET /api/lavadoras",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lavadoras",
+            "description": "Devuelve todas las lavadoras registradas."
+          }
+        },
+        {
+          "name": "Ver lavadora 1 - GET /api/lavadoras/1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lavadoras/1",
+            "description": "Consulta un recurso concreto por su id."
+          }
+        },
+        {
+          "name": "Lavadora inexistente - GET /api/lavadoras/9999",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404 Not Found', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lavadoras/9999",
+            "description": "Caso negativo: el recurso no existe."
+          }
+        },
+        {
+          "name": "Listar servicios - GET /api/servicios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/servicios",
+            "description": "Estos son los servicios que se muestran en la página pública."
+          }
+        },
+        {
+          "name": "Disponibilidad - GET /api/lavadoras/1/disponibilidad",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lavadoras/1/disponibilidad?inicio=2026-12-01&fin=2026-12-05",
+            "description": "Consulta si una lavadora está libre en un rango de fechas."
+          }
+        },
+        {
+          "name": "Stats sin token - GET /api/stats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401 Unauthorized', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/stats",
+            "description": "Caso negativo: ruta protegida sin token."
+          }
+        },
+        {
+          "name": "Stats con token - GET /api/stats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/stats",
+            "description": "Ruta protegida con el token obtenido en el login."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. POST - Crear",
+      "item": [
+        {
+          "name": "Login - POST /api/auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"admin@lujolavadoras.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login",
+            "description": "Guarda el token automáticamente en la variable {{token}}."
+          }
+        },
+        {
+          "name": "Crear lavadora sin token - POST /api/lavadoras",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401 Unauthorized', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": \"Prueba\",\n  \"modelo\": \"Demo HTTP\",\n  \"referencia\": \"TEST-HTTP-01\",\n  \"precio_alquiler\": 100000,\n  \"estado\": \"Disponible\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lavadoras",
+            "description": "Caso negativo: sin token no se puede crear."
+          }
+        },
+        {
+          "name": "Crear lavadora - POST /api/lavadoras",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', function () { pm.response.to.have.status(201); });",
+                  "pm.collectionVariables.set('idLavadora', pm.response.json().id_lavadora);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": \"Prueba\",\n  \"modelo\": \"Demo HTTP\",\n  \"referencia\": \"TEST-HTTP-01\",\n  \"precio_alquiler\": 100000,\n  \"estado\": \"Disponible\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lavadoras",
+            "description": "Crea una lavadora de prueba y guarda su id en {{idLavadora}}."
+          }
+        },
+        {
+          "name": "Crear servicio - POST /api/servicios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', function () { pm.response.to.have.status(201); });",
+                  "pm.collectionVariables.set('idServicio', pm.response.json().id_tipo_servicio);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre_servicio\": \"Servicio de prueba HTTP\",\n  \"descripcion\": \"Creado para la demostración de métodos HTTP\",\n  \"precio\": 15000\n}"
+            },
+            "url": "{{baseUrl}}/api/servicios",
+            "description": "Crea un servicio de prueba y guarda su id en {{idServicio}}."
+          }
+        },
+        {
+          "name": "Crear alquiler - POST /api/alquileres",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('201 Created', function () { pm.response.to.have.status(201); });",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('idAlquiler', body.alquiler.id_alquiler);",
+                  "pm.collectionVariables.set('idOrden', body.orden.id_orden_servicio);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {\n    \"nombre\": \"Cliente Prueba HTTP\",\n    \"cedula\": \"1099887766\",\n    \"telefono\": \"3001234567\",\n    \"correo\": \"prueba@http.com\",\n    \"direccion\": \"Calle 1 # 2-3\"\n  },\n  \"idLavadora\": {{idLavadora}},\n  \"fecha_inicio\": \"2026-12-01\",\n  \"fecha_fin\": \"2026-12-05\",\n  \"idTipo_servicio\": {{idServicio}},\n  \"observaciones\": \"Alquiler de prueba para la demostración\"\n}"
+            },
+            "url": "{{baseUrl}}/api/alquileres",
+            "description": "Crea cliente, alquiler y orden de servicio en una sola transacción. Guarda {{idAlquiler}} y {{idOrden}}."
+          }
+        },
+        {
+          "name": "Alquiler solapado - POST /api/alquileres",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('409 Conflict', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": {\n    \"nombre\": \"Cliente Prueba HTTP\",\n    \"cedula\": \"1099887766\",\n    \"telefono\": \"3001234567\",\n    \"correo\": \"prueba@http.com\"\n  },\n  \"idLavadora\": {{idLavadora}},\n  \"fecha_inicio\": \"2026-12-02\",\n  \"fecha_fin\": \"2026-12-06\",\n  \"idTipo_servicio\": {{idServicio}}\n}"
+            },
+            "url": "{{baseUrl}}/api/alquileres",
+            "description": "Caso negativo: la lavadora ya está ocupada en esas fechas."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. PUT - Actualizar completo",
+      "item": [
+        {
+          "name": "Actualizar lavadora - PUT /api/lavadoras/{{idLavadora}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Modelo actualizado', function () { pm.expect(pm.response.json().modelo).to.eql('Demo HTTP actualizada'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marca\": \"Prueba\",\n  \"modelo\": \"Demo HTTP actualizada\",\n  \"referencia\": \"TEST-HTTP-01\",\n  \"precio_alquiler\": 110000,\n  \"estado\": \"Disponible\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+            "description": "PUT reemplaza todos los campos del recurso."
+          }
+        },
+        {
+          "name": "Actualizar servicio - PUT /api/servicios/{{idServicio}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Nombre actualizado', function () { pm.expect(pm.response.json().nombre_servicio).to.eql('Servicio de prueba HTTP (actualizado)'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre_servicio\": \"Servicio de prueba HTTP (actualizado)\",\n  \"descripcion\": \"Servicio actualizado con PUT para la demostración\",\n  \"precio\": 18000\n}"
+            },
+            "url": "{{baseUrl}}/api/servicios/{{idServicio}}",
+            "description": "PUT reemplaza nombre, descripción y precio del servicio."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. PATCH - Actualizar parcial",
+      "item": [
+        {
+          "name": "Activar alquiler - PATCH /api/alquileres/{{idAlquiler}}/estado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Estado Activo', function () { pm.expect(pm.response.json().estado).to.eql('Activo'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Activo\"\n}"
+            },
+            "url": "{{baseUrl}}/api/alquileres/{{idAlquiler}}/estado",
+            "description": "PATCH cambia solo el estado. Además actualiza el estado de la lavadora a Alquilada."
+          }
+        },
+        {
+          "name": "Orden en proceso - PATCH /api/ordenes/{{idOrden}}/estado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Estado En proceso', function () { pm.expect(pm.response.json().estado).to.eql('En proceso'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"En proceso\",\n  \"observaciones\": \"Orden actualizada con PATCH\"\n}"
+            },
+            "url": "{{baseUrl}}/api/ordenes/{{idOrden}}/estado",
+            "description": "PATCH cambia el estado de la orden y opcionalmente las observaciones."
+          }
+        },
+        {
+          "name": "Estado inválido - PATCH /api/alquileres/{{idAlquiler}}/estado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400 Bad Request', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"Volando\"\n}"
+            },
+            "url": "{{baseUrl}}/api/alquileres/{{idAlquiler}}/estado",
+            "description": "Caso negativo: estado no permitido."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. DELETE - Eliminar",
+      "item": [
+        {
+          "name": "Eliminar orden - DELETE /api/ordenes/{{idOrden}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/ordenes/{{idOrden}}",
+            "description": "Primero se elimina la orden porque tiene una clave foránea hacia el alquiler."
+          }
+        },
+        {
+          "name": "Eliminar orden otra vez - DELETE /api/ordenes/{{idOrden}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404 Not Found', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/ordenes/{{idOrden}}",
+            "description": "Caso negativo: ya no existe."
+          }
+        },
+        {
+          "name": "Eliminar lavadora con alquiler - DELETE /api/lavadoras/{{idLavadora}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('409 Conflict', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+            "description": "Caso negativo: la lavadora todavía tiene un alquiler asociado (clave foránea)."
+          }
+        },
+        {
+          "name": "Eliminar alquiler - DELETE /api/alquileres/{{idAlquiler}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/alquileres/{{idAlquiler}}",
+            "description": "Al eliminar el alquiler, la lavadora vuelve a Disponible."
+          }
+        },
+        {
+          "name": "Eliminar servicio - DELETE /api/servicios/{{idServicio}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/servicios/{{idServicio}}",
+            "description": "Elimina el servicio de prueba."
+          }
+        },
+        {
+          "name": "Eliminar lavadora - DELETE /api/lavadoras/{{idLavadora}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+            "description": "Elimina la lavadora de prueba."
+          }
+        },
+        {
+          "name": "Eliminar lavadora otra vez - DELETE /api/lavadoras/{{idLavadora}}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404 Not Found', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+            "description": "Caso negativo: ya no existe."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Verificación",
+      "item": [
+        {
+          "name": "Clientes registrados - GET /api/clientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/clientes",
+            "description": "Al final debe quedar solo el cliente de prueba; se borra por SQL porque no hay DELETE /api/clientes."
+          }
+        },
+        {
+          "name": "Alquileres - GET /api/alquileres",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/alquileres",
+            "description": "Debe quedar vacío después de la limpieza."
+          }
+        },
+        {
+          "name": "Órdenes - GET /api/ordenes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/ordenes",
+            "description": "Debe quedar vacío después de la limpieza."
+          }
+        }
+      ]
+    }
+  ]
+}

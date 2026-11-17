@@ -1,0 +1,56 @@
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" routerLink="/" (click)="cerrarMenu()" aria-label="Lujo Lavadoras, inicio">
+      <span class="brand-mark">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="3.5" y="2.5" width="25" height="27" rx="6" stroke="currentColor" stroke-width="1.7" />
+          <circle cx="16" cy="18" r="7" stroke="currentColor" stroke-width="1.7" />
+          <circle cx="16" cy="18" r="3" fill="currentColor" />
+          <circle cx="9.5" cy="7.5" r="1.4" fill="currentColor" />
+          <path d="M21 7.5h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span class="brand-name">Lujo<span>Lavadoras</span></span>
+    </a>
+
+    <nav class="nav-links" [class.is-open]="menu()" aria-label="Navegación principal">
+      <a routerLink="/" fragment="inicio" (click)="cerrarMenu()">Inicio</a>
+      <a routerLink="/" fragment="servicios" (click)="cerrarMenu()">Servicios</a>
+      <a routerLink="/" fragment="comentarios" (click)="cerrarMenu()">Comentarios</a>
+      <a routerLink="/" fragment="acerca-de" (click)="cerrarMenu()">Acerca de</a>
+      <a routerLink="/" fragment="contacto" (click)="cerrarMenu()">Contacto</a>
+    </nav>
+
+    <div class="nav-actions">
+      @if (auth.usuario()) {
+        <a routerLink="/admin" class="btn btn-sm btn-primary" (click)="cerrarMenu()">Panel</a>
+        <button type="button" class="btn btn-sm btn-ghost" (click)="salir()">Salir</button>
+      } @else {
+        <a routerLink="/login" class="btn btn-sm btn-ghost" (click)="cerrarMenu()">Ingresar</a>
+        <a
+          [href]="whatsapp"
+          target="_blank"
+          rel="noopener"
+          class="btn btn-sm btn-primary"
+          (click)="cerrarMenu()"
+        >
+          Alquilar
+        </a>
+      }
+
+      <button
+        type="button"
+        class="menu-btn"
+        (click)="menu.set(!menu())"
+        [attr.aria-expanded]="menu()"
+        aria-label="Abrir menú"
+      >
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <router-outlet />
+</main>

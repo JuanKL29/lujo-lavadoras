@@ -1,0 +1,987 @@
+<section class="admin">
+  <div class="container">
+    <div class="admin-head">
+      <div>
+        <span class="eyebrow">Administración</span>
+        <h1>Panel de control</h1>
+        <p class="muted">
+          Hola, {{ auth.usuario()?.nombre }}. Gestiona lavadoras, alquileres, órdenes, clientes,
+          servicios y comentarios.
+        </p>
+      </div>
+      <div class="row">
+        <a routerLink="/" class="btn btn-sm btn-ghost">Ver sitio</a>
+        <button type="button" class="btn btn-sm btn-ghost" (click)="auth.logout()">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      @for (t of tabs; track t.id) {
+        <button
+          type="button"
+          class="tab"
+          role="tab"
+          [class.is-active]="tab() === t.id"
+          [attr.aria-selected]="tab() === t.id"
+          (click)="tab.set(t.id)"
+        >
+          {{ t.label }}
+          @if (t.id === 'alquileres' && (stats()?.pendientes ?? 0) > 0) {
+            <span class="tab-dot">{{ stats()?.pendientes }}</span>
+          }
+          @if (t.id === 'comentarios' && comentariosPendientes() > 0) {
+            <span class="tab-dot">{{ comentariosPendientes() }}</span>
+          }
+        </button>
+      }
+    </div>
+
+    @if (aviso()) {
+      <div class="alert alert--ok between">
+        <span>{{ aviso() }}</span>
+        <button type="button" class="btn-link" (click)="aviso.set('')" aria-label="Cerrar">✕</button>
+      </div>
+    }
+    @if (error()) {
+      <div class="alert alert--error between">
+        <span>{{ error() }}</span>
+        <button type="button" class="btn-link" (click)="error.set('')" aria-label="Cerrar">✕</button>
+      </div>
+    }
+
+    @if (cargando()) {
+      <div class="loading"><span class="spinner"></span> Cargando información…</div>
+    } @else {
+      @switch (tab()) {
+        @case ('resumen') {
+          <div class="stat-grid">
+            <div class="stat">
+              <span>Lavadoras</span>
+              <strong>{{ stats()?.lavadoras ?? 0 }}</strong>
+              <small>{{ stats()?.disponibles ?? 0 }} disponibles</small>
+            </div>
+            <div class="stat">
+              <span>Alquileres</span>
+              <strong>{{ stats()?.alquileres ?? 0 }}</strong>
+              <small>{{ stats()?.activos ?? 0 }} activos</small>
+            </div>
+            <div class="stat stat--blue">
+              <span>Pendientes</span>
+              <strong>{{ stats()?.pendientes ?? 0 }}</strong>
+              <small>por confirmar</small>
+            </div>
+            <div class="stat">
+              <span>Clientes</span>
+              <strong>{{ stats()?.clientes ?? 0 }}</strong>
+              <small>{{ stats()?.ordenes_abiertas ?? 0 }} órdenes abiertas</small>
+            </div>
+            <div class="stat stat--wide">
+              <span>Ingreso estimado</span>
+              <strong class="stat-money">
+                {{ (stats()?.ingreso_estimado ?? 0) | money }}
+              </strong>
+              <small>alquileres no cancelados</small>
+            </div>
+          </div>
+
+          <div class="panel resumen-panel">
+            <div class="panel-head">
+              <h2>Alquileres recientes</h2>
+              <button type="button" class="btn btn-sm btn-ghost" (click)="tab.set('alquileres')">
+                Ver todos
+              </button>
+            </div>
+
+            <div class="estado-row">
+              @for (e of porEstado(); track e.estado) {
+                <span class="badge" [class]="'badge ' + estadoAlquilerClase(e.estado)">
+                  {{ e.estado }}: {{ e.total }}
+                </span>
+              } @empty {
+                <span class="small muted">Aún no hay alquileres registrados.</span>
+              }
+            </div>
+
+            @if (!recientes().length) {
+              <div class="empty">Todavía no hay alquileres. Los verás aquí en cuanto llegue el primero.</div>
+            } @else {
+              <div class="table-wrap">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Cliente</th>
+                      <th>Lavadora</th>
+                      <th>Fechas</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (a of recientes(); track a.id_alquiler) {
+                      <tr>
+                        <td>{{ a.id_alquiler }}</td>
+                        <td>{{ a.cliente_nombre }}</td>
+                        <td>{{ a.marca }} {{ a.modelo }}</td>
+                        <td class="small">
+                          {{ formatFecha(a.fecha_inicio) }} → {{ formatFecha(a.fecha_fin) }}
+                        </td>
+                        <td>
+                          <span class="badge" [class]="'badge ' + estadoAlquilerClase(a.estado)">
+                            {{ a.estado }}
+                          </span>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
+          </div>
+        }
+
+        @case ('lavadoras') {
+          <div class="toolbar">
+            <div>
+              <h2>Catálogo de lavadoras</h2>
+              <p class="small muted">{{ lavadoras().length }} registradas</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" (click)="abrirLavadora()">
+              + Nueva lavadora
+            </button>
+          </div>
+
+          @if (lavadoras().length === 0) {
+            <div class="empty">No hay lavadoras. Crea la primera con el botón de arriba.</div>
+          } @else {
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Marca y modelo</th>
+                    <th>Referencia</th>
+                    <th>Precio / mes</th>
+                    <th>Estado</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (l of lavadoras(); track l.id_lavadora) {
+                    <tr>
+                      <td>{{ l.id_lavadora }}</td>
+                      <td>
+                        <strong>{{ l.marca }}</strong>
+                        <div class="small muted">{{ l.modelo }}</div>
+                      </td>
+                      <td class="small">{{ l.referencia }}</td>
+                      <td>{{ l.precio_alquiler | money }}</td>
+                      <td>
+                        <span class="badge" [class]="'badge ' + estadoLavadoraClase(l.estado)">
+                          {{ l.estado }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <button type="button" class="btn btn-sm btn-ghost" (click)="abrirLavadora(l)">
+                            Editar
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" (click)="eliminarLavadora(l)">
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+
+        @case ('alquileres') {
+          <div class="toolbar">
+            <div>
+              <h2>Alquileres</h2>
+              <p class="small muted">
+                {{ alquileres().length }} registrados · cambia el estado para actualizar la lavadora
+              </p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" (click)="abrirAlquiler()">
+              + Nuevo alquiler
+            </button>
+          </div>
+
+          @if (alquileres().length === 0) {
+            <div class="empty">No hay alquileres registrados. Registra el primero con el botón de arriba.</div>
+          } @else {
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Lavadora</th>
+                    <th>Fechas</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (a of alquileres(); track a.id_alquiler) {
+                    <tr>
+                      <td>{{ a.id_alquiler }}</td>
+                      <td>
+                        <strong>{{ a.cliente_nombre }}</strong>
+                        <div class="small muted">{{ a.telefono }}</div>
+                      </td>
+                      <td>
+                        {{ a.marca }} {{ a.modelo }}
+                        <div class="small muted">{{ a.referencia }}</div>
+                      </td>
+                      <td class="small">
+                        {{ formatFecha(a.fecha_inicio) }} → {{ formatFecha(a.fecha_fin) }}
+                        <div class="muted">{{ a.dias }} días</div>
+                      </td>
+                      <td>{{ (a.total ?? 0) | money }}</td>
+                      <td>
+                        <select
+                          (change)="cambiarEstadoAlquiler(a.id_alquiler, $event)"
+                          aria-label="Cambiar estado del alquiler"
+                        >
+                          @for (estado of estadosAlquiler; track estado) {
+                            <option [value]="estado" [selected]="estado === a.estado">
+                              {{ estado }}
+                            </option>
+                          }
+                        </select>
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <button type="button" class="btn btn-sm btn-danger" (click)="eliminarAlquiler(a)">
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+
+        @case ('ordenes') {
+          <div class="toolbar">
+            <div>
+              <h2>Órdenes de servicio</h2>
+              <p class="small muted">{{ ordenes().length }} registradas</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" (click)="abrirOrden()">
+              + Nueva orden
+            </button>
+          </div>
+
+          @if (ordenes().length === 0) {
+            <div class="empty">
+              No hay órdenes de servicio. Primero registra un alquiler y luego crea la orden.
+            </div>
+          } @else {
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Lavadora</th>
+                    <th>Servicio</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Observaciones</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (o of ordenes(); track o.id_orden_servicio) {
+                    <tr>
+                      <td>{{ o.id_orden_servicio }}</td>
+                      <td>{{ o.cliente_nombre }}</td>
+                      <td class="small">{{ o.marca }} {{ o.modelo }}</td>
+                      <td>
+                        {{ o.nombre_servicio }}
+                        <div class="small muted">{{ (o.precio_servicio ?? 0) | money }}</div>
+                      </td>
+                      <td class="small">{{ formatFecha(o.fecha_orden) }}</td>
+                      <td>
+                        <select
+                          (change)="cambiarEstadoOrden(o.id_orden_servicio, $event)"
+                          aria-label="Cambiar estado de la orden"
+                        >
+                          @for (estado of estadosOrden; track estado) {
+                            <option [value]="estado" [selected]="estado === o.estado">
+                              {{ estado }}
+                            </option>
+                          }
+                        </select>
+                      </td>
+                      <td class="small muted observaciones" [title]="o.observaciones ?? ''">
+                        {{ o.observaciones || '—' }}
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-danger"
+                            (click)="eliminarOrden(o)"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+
+        @case ('clientes') {
+          <div class="toolbar">
+            <div>
+              <h2>Clientes</h2>
+              <p class="small muted">{{ clientes().length }} registrados</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" (click)="abrirCliente()">
+              + Nuevo cliente
+            </button>
+          </div>
+
+          @if (clientes().length === 0) {
+            <div class="empty">No hay clientes. Crea el primero con el botón de arriba.</div>
+          } @else {
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Cédula</th>
+                    <th>Contacto</th>
+                    <th>Dirección</th>
+                    <th>Alquileres</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (c of clientes(); track c.id_cliente) {
+                    <tr>
+                      <td><strong>{{ c.nombre }}</strong></td>
+                      <td>{{ c.cedula }}</td>
+                      <td class="small">
+                        {{ c.telefono }}
+                        <div class="muted">{{ c.correo }}</div>
+                      </td>
+                      <td class="small muted">{{ c.direccion || '—' }}</td>
+                      <td>
+                        {{ c.total_alquileres ?? 0 }}
+                        <div class="small muted">
+                          {{ c.ultimo_alquiler ? formatFecha(c.ultimo_alquiler) : 'Sin alquileres' }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <button type="button" class="btn btn-sm btn-ghost" (click)="abrirCliente(c)">
+                            Editar
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-danger"
+                            (click)="eliminarCliente(c)"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+
+        @case ('servicios') {
+          <div class="toolbar">
+            <div>
+              <h2>Servicios adicionales</h2>
+              <p class="small muted">{{ servicios().length }} registrados</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" (click)="abrirServicio()">
+              + Nuevo servicio
+            </button>
+          </div>
+
+          @if (servicios().length === 0) {
+            <div class="empty">No hay servicios. Crea el primero con el botón de arriba.</div>
+          } @else {
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Servicio</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (s of servicios(); track s.id_tipo_servicio) {
+                    <tr>
+                      <td><strong>{{ s.nombre_servicio }}</strong></td>
+                      <td class="small muted">{{ s.descripcion || '—' }}</td>
+                      <td>{{ s.precio | money }}</td>
+                      <td>
+                        <div class="actions">
+                          <button type="button" class="btn btn-sm btn-ghost" (click)="abrirServicio(s)">
+                            Editar
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger" (click)="eliminarServicio(s)">
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+
+        @case ('comentarios') {
+          <div class="toolbar">
+            <div>
+              <h2>Comentarios</h2>
+              <p class="small muted">
+                {{ comentarios().length }} recibidos · {{ comentariosPendientes() }} por revisar
+              </p>
+            </div>
+          </div>
+
+          @if (comentarios().length === 0) {
+            <div class="empty">
+              Todavía no hay comentarios. Los que envíen los clientes aparecerán aquí para que
+              decidas cuáles se publican.
+            </div>
+          } @else {
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Visible en la página</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (c of comentarios(); track c.id_comentario) {
+                    <tr>
+                      <td class="small">{{ formatFecha(c.fecha) }}</td>
+                      <td>
+                        <strong>{{ c.nombre }}</strong>
+                        <div class="small muted">{{ c.correo || 'Sin correo' }}</div>
+                      </td>
+                      <td>
+                        <span
+                          class="stars"
+                          role="img"
+                          [attr.aria-label]="c.calificacion + ' de 5 estrellas'"
+                        >
+                          @for (n of estrellas; track n) {
+                            <span aria-hidden="true" [class.is-active]="n <= c.calificacion">
+                              ★
+                            </span>
+                          }
+                        </span>
+                      </td>
+                      <td class="small comentario-texto" [title]="c.comentario">
+                        {{ c.comentario }}
+                      </td>
+                      <td>
+                        <label class="switch">
+                          <input
+                            type="checkbox"
+                            [checked]="c.visible"
+                            [attr.aria-label]="
+                              (c.visible ? 'Ocultar' : 'Publicar') +
+                              ' el comentario de ' +
+                              c.nombre
+                            "
+                            (change)="cambiarVisibilidadComentario(c, $event)"
+                          />
+                          <span class="switch-track" aria-hidden="true">
+                            <span class="switch-thumb"></span>
+                          </span>
+                        </label>
+                      </td>
+                      <td>
+                        <div class="actions">
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-danger"
+                            (click)="eliminarComentario(c)"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        }
+      }
+    }
+  </div>
+</section>
+
+@if (modal(); as m) {
+  <div class="modal-backdrop" (click)="cerrarModal()">
+    <div class="modal card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h2>{{ tituloModal() }}</h2>
+        <button type="button" class="btn btn-sm btn-ghost" (click)="cerrarModal()" aria-label="Cerrar">
+          ✕
+        </button>
+      </div>
+
+      @if (modalError()) {
+        <div class="alert alert--error modal-alert" role="alert">
+          <span>{{ modalError() }}</span>
+        </div>
+      }
+
+      @if (m.tipo === 'lavadora') {
+        <form [formGroup]="formLavadora" (ngSubmit)="guardarLavadora()" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="marca">Marca</label>
+              <input id="marca" type="text" formControlName="marca" placeholder="LG" />
+              @if (formLavadora.controls.marca.touched && formLavadora.controls.marca.invalid) {
+                <span class="error">Escribe la marca.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="modelo">Modelo</label>
+              <input id="modelo" type="text" formControlName="modelo" placeholder="WM3400CW" />
+              @if (formLavadora.controls.modelo.touched && formLavadora.controls.modelo.invalid) {
+                <span class="error">Escribe el modelo.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="referencia">Referencia</label>
+              <input id="referencia" type="text" formControlName="referencia" placeholder="LG-WM3400" />
+              @if (formLavadora.controls.referencia.touched && formLavadora.controls.referencia.invalid) {
+                <span class="error">Escribe la referencia.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="estado">Estado</label>
+              <select id="estado" formControlName="estado">
+                @for (estado of estadosLavadora; track estado) {
+                  <option [value]="estado">{{ estado }}</option>
+                }
+              </select>
+            </div>
+            <div class="field span-2">
+              <label for="precio">Precio de alquiler mensual (COP)</label>
+              <input id="precio" type="number" min="1" step="1000" formControlName="precio_alquiler" />
+              @if (
+                formLavadora.controls.precio_alquiler.touched &&
+                formLavadora.controls.precio_alquiler.invalid
+              ) {
+                <span class="error">El precio debe ser mayor a cero.</span>
+              }
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+              {{ guardando() ? 'Guardando…' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      } @else if (m.tipo === 'servicio') {
+        <form [formGroup]="formServicio" (ngSubmit)="guardarServicio()" novalidate>
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="nombre_servicio">Nombre del servicio</label>
+              <input
+                id="nombre_servicio"
+                type="text"
+                formControlName="nombre_servicio"
+                placeholder="Instalación y transporte"
+              />
+              @if (
+                formServicio.controls.nombre_servicio.touched &&
+                formServicio.controls.nombre_servicio.invalid
+              ) {
+                <span class="error">Escribe el nombre del servicio.</span>
+              }
+            </div>
+            <div class="field span-2">
+              <label for="descripcion">Descripción</label>
+              <textarea
+                id="descripcion"
+                rows="3"
+                formControlName="descripcion"
+                placeholder="Qué incluye el servicio"
+              ></textarea>
+            </div>
+            <div class="field span-2">
+              <label for="precio_servicio">Precio (COP)</label>
+              <input
+                id="precio_servicio"
+                type="number"
+                min="1"
+                step="1000"
+                formControlName="precio"
+              />
+              @if (formServicio.controls.precio.touched && formServicio.controls.precio.invalid) {
+                <span class="error">El precio debe ser mayor a cero.</span>
+              }
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+              {{ guardando() ? 'Guardando…' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      } @else if (m.tipo === 'alquiler') {
+        <form [formGroup]="formAlquiler" (ngSubmit)="guardarAlquiler()" novalidate>
+          <p class="small muted modal-note">
+            Si el cliente ya existe, se actualiza por cédula. La lavadora queda reservada y el
+            alquiler se registra en estado <strong>Pendiente</strong>. El precio es
+            <strong>mensual</strong> y el total se calcula proporcional a los días del alquiler.
+          </p>
+
+          <div class="cliente-modo" role="tablist" aria-label="Tipo de cliente">
+            <button
+              type="button"
+              role="tab"
+              class="cliente-modo-btn"
+              [class.is-active]="modoClienteAlquiler() === 'nuevo'"
+              [attr.aria-selected]="modoClienteAlquiler() === 'nuevo'"
+              (click)="cambiarModoClienteAlquiler('nuevo')"
+            >
+              Cliente nuevo
+            </button>
+            <button
+              type="button"
+              role="tab"
+              class="cliente-modo-btn"
+              [class.is-active]="modoClienteAlquiler() === 'existente'"
+              [attr.aria-selected]="modoClienteAlquiler() === 'existente'"
+              (click)="cambiarModoClienteAlquiler('existente')"
+            >
+              Cliente existente
+            </button>
+          </div>
+
+          <div class="form-grid">
+            @if (modoClienteAlquiler() === 'existente') {
+              @if (clientes().length) {
+                <div class="field span-2">
+                  <label for="alq_cliente">Cliente registrado</label>
+                  <select
+                    id="alq_cliente"
+                    formControlName="idCliente"
+                    (change)="seleccionarClienteAlquiler($event)"
+                  >
+                    <option value="0">Selecciona un cliente</option>
+                    @for (c of clientes(); track c.id_cliente) {
+                      <option [value]="c.id_cliente">
+                        {{ c.nombre }} · cédula {{ c.cedula }}
+                      </option>
+                    }
+                  </select>
+                  @if (
+                    formAlquiler.controls.idCliente.touched &&
+                    formAlquiler.controls.idCliente.value === '0'
+                  ) {
+                    <span class="error">Selecciona un cliente de la lista.</span>
+                  }
+                  <span class="hint">
+                    Al elegirlo se cargan sus datos y el alquiler queda vinculado a su cédula.
+                  </span>
+                </div>
+              } @else {
+                <div class="field span-2">
+                  <div class="alert alert--error">
+                    <span>
+                      Todavía no hay clientes registrados. Crea uno primero para poder alquilarle.
+                    </span>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-primary" (click)="irACrearCliente()">
+                    + Crear cliente
+                  </button>
+                </div>
+              }
+            } @else {
+              <div class="field span-2">
+                <label for="alq_nombre">Nombre del cliente</label>
+                <input id="alq_nombre" type="text" formControlName="nombre" placeholder="Ana Pérez" />
+                @if (formAlquiler.controls.nombre.touched && formAlquiler.controls.nombre.invalid) {
+                  <span class="error">Escribe el nombre del cliente.</span>
+                }
+              </div>
+              <div class="field">
+                <label for="alq_cedula">Cédula</label>
+                <input
+                  id="alq_cedula"
+                  type="text"
+                  inputmode="numeric"
+                  formControlName="cedula"
+                  placeholder="1020304050"
+                />
+                @if (formAlquiler.controls.cedula.touched && formAlquiler.controls.cedula.invalid) {
+                  @if (formAlquiler.controls.cedula.hasError('cedulaRango')) {
+                    <span class="error">La cédula no puede superar 2.147.483.647.</span>
+                  } @else {
+                    <span class="error">Entre 5 y 10 dígitos, sin puntos.</span>
+                  }
+                }
+              </div>
+              <div class="field">
+                <label for="alq_telefono">Teléfono / WhatsApp</label>
+                <input
+                  id="alq_telefono"
+                  type="tel"
+                  formControlName="telefono"
+                  placeholder="3001234567"
+                />
+                @if (
+                  formAlquiler.controls.telefono.touched && formAlquiler.controls.telefono.invalid
+                ) {
+                  <span class="error">Escribe el teléfono.</span>
+                }
+              </div>
+              <div class="field">
+                <label for="alq_correo">Correo</label>
+                <input
+                  id="alq_correo"
+                  type="email"
+                  formControlName="correo"
+                  placeholder="cliente@correo.com"
+                />
+                @if (formAlquiler.controls.correo.touched && formAlquiler.controls.correo.invalid) {
+                  <span class="error">Escribe un correo válido.</span>
+                }
+              </div>
+              <div class="field">
+                <label for="alq_direccion">Dirección (opcional)</label>
+                <input
+                  id="alq_direccion"
+                  type="text"
+                  formControlName="direccion"
+                  placeholder="Calle 10 # 5-20"
+                />
+              </div>
+            }
+            <div class="field span-2">
+              <label for="alq_lavadora">Lavadora</label>
+              <select id="alq_lavadora" formControlName="idLavadora">
+                <option value="">Selecciona una lavadora</option>
+                @for (l of lavadorasAlquilables(); track l.id_lavadora) {
+                  <option [value]="l.id_lavadora">
+                    {{ l.marca }} {{ l.modelo }} · {{ l.referencia }} · {{ l.estado }} ·
+                    {{ l.precio_alquiler | money }}/mes
+                  </option>
+                }
+              </select>
+              @if (
+                formAlquiler.controls.idLavadora.touched &&
+                formAlquiler.controls.idLavadora.invalid
+              ) {
+                <span class="error">Selecciona una lavadora.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="alq_inicio">Fecha de inicio</label>
+              <input id="alq_inicio" type="date" formControlName="fecha_inicio" />
+            </div>
+            <div class="field">
+              <label for="alq_fin">Fecha de fin</label>
+              <input id="alq_fin" type="date" formControlName="fecha_fin" />
+              @if (formAlquiler.hasError('rango')) {
+                <span class="error">La fecha de fin no puede ser anterior a la de inicio.</span>
+              }
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+              {{ guardando() ? 'Guardando…' : 'Registrar alquiler' }}
+            </button>
+          </div>
+        </form>
+      } @else if (m.tipo === 'orden') {
+        <form [formGroup]="formOrden" (ngSubmit)="guardarOrden()" novalidate>
+          <p class="small muted modal-note">
+            La orden se asocia a un alquiler existente. Si el cliente pidió el servicio al
+            registrar el alquiler, la orden ya se creó automáticamente.
+          </p>
+
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="ord_alquiler">Alquiler</label>
+              <select id="ord_alquiler" formControlName="idAlquiler">
+                <option value="">Selecciona un alquiler</option>
+                @for (a of alquileresParaOrden(); track a.id_alquiler) {
+                  <option [value]="a.id_alquiler">
+                    #{{ a.id_alquiler }} · {{ a.cliente_nombre }} · {{ a.marca }}
+                    {{ a.modelo }} · {{ formatFecha(a.fecha_inicio) }} al
+                    {{ formatFecha(a.fecha_fin) }}
+                  </option>
+                }
+              </select>
+              @if (
+                formOrden.controls.idAlquiler.touched && formOrden.controls.idAlquiler.invalid
+              ) {
+                <span class="error">Selecciona el alquiler.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="ord_servicio">Servicio</label>
+              <select id="ord_servicio" formControlName="idTipo_servicio">
+                <option value="">Selecciona un servicio</option>
+                @for (s of servicios(); track s.id_tipo_servicio) {
+                  <option [value]="s.id_tipo_servicio">
+                    {{ s.nombre_servicio }} · {{ s.precio | money }}
+                  </option>
+                }
+              </select>
+              @if (
+                formOrden.controls.idTipo_servicio.touched &&
+                formOrden.controls.idTipo_servicio.invalid
+              ) {
+                <span class="error">Selecciona el servicio.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="ord_estado">Estado</label>
+              <select id="ord_estado" formControlName="estado">
+                @for (estado of estadosOrden; track estado) {
+                  <option [value]="estado">{{ estado }}</option>
+                }
+              </select>
+            </div>
+            <div class="field span-2">
+              <label for="ord_observaciones">Observaciones (opcional)</label>
+              <textarea
+                id="ord_observaciones"
+                rows="2"
+                formControlName="observaciones"
+                placeholder="Detalles del trabajo a realizar"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+              {{ guardando() ? 'Guardando…' : 'Crear orden' }}
+            </button>
+          </div>
+        </form>
+      } @else {
+        <form [formGroup]="formCliente" (ngSubmit)="guardarCliente()" novalidate>
+          <div class="form-grid">
+            <div class="field span-2">
+              <label for="cli_nombre">Nombre completo</label>
+              <input id="cli_nombre" type="text" formControlName="nombre" placeholder="Ana Pérez" />
+              @if (formCliente.controls.nombre.touched && formCliente.controls.nombre.invalid) {
+                <span class="error">Escribe el nombre del cliente.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="cli_cedula">Cédula</label>
+              <input
+                id="cli_cedula"
+                type="text"
+                inputmode="numeric"
+                formControlName="cedula"
+                placeholder="1020304050"
+              />
+              @if (formCliente.controls.cedula.touched && formCliente.controls.cedula.invalid) {
+                @if (formCliente.controls.cedula.hasError('cedulaDuplicada')) {
+                  <span class="error">
+                    No se puede agregar: ya existe un cliente con esa cédula.
+                  </span>
+                } @else if (formCliente.controls.cedula.hasError('cedulaRango')) {
+                  <span class="error">La cédula no puede superar 2.147.483.647.</span>
+                } @else {
+                  <span class="error">Entre 5 y 10 dígitos, sin puntos.</span>
+                }
+              }
+            </div>
+            <div class="field">
+              <label for="cli_telefono">Teléfono / WhatsApp</label>
+              <input
+                id="cli_telefono"
+                type="tel"
+                formControlName="telefono"
+                placeholder="3001234567"
+              />
+              @if (
+                formCliente.controls.telefono.touched && formCliente.controls.telefono.invalid
+              ) {
+                <span class="error">Escribe el teléfono.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="cli_correo">Correo</label>
+              <input
+                id="cli_correo"
+                type="email"
+                formControlName="correo"
+                placeholder="cliente@correo.com"
+              />
+              @if (formCliente.controls.correo.touched && formCliente.controls.correo.invalid) {
+                <span class="error">Escribe un correo válido.</span>
+              }
+            </div>
+            <div class="field">
+              <label for="cli_direccion">Dirección (opcional)</label>
+              <input
+                id="cli_direccion"
+                type="text"
+                formControlName="direccion"
+                placeholder="Calle 10 # 5-20"
+              />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" (click)="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="guardando()">
+              {{ guardando() ? 'Guardando…' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+}

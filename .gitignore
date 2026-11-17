@@ -1,0 +1,26 @@
+# Dependencias instaladas
+node_modules/
+
+# Compilados y cachés de Angular
+dist/
+.angular/
+
+# Variables de entorno (credenciales y claves)
+.env
+.env.*
+!.env.example
+
+# Registros de ejecución y procesos
+logs/
+*.log
+*.pid
+
+# Reportes generados (se regeneran con npm run cobertura)
+docs/coverage/
+
+# Archivos temporales de Office
+~$*
+
+# Sistema operativo y editor
+.DS_Store
+Thumbs.db

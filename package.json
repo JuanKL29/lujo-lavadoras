@@ -1,0 +1,15 @@
+{
+  "name": "lujo-lavadoras",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing y panel de administración para el alquiler de lavadoras",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "setup": "npm --prefix backend run setup",
+    "seed": "npm --prefix backend run seed",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix backend start",
+    "dev:api": "npm --prefix backend run dev",
+    "dev:web": "npm --prefix frontend start"
+  }
+}

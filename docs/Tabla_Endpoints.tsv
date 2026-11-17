@@ -1,0 +1,27 @@
+﻿Método	Ruta	Descripción	Datos que recibe	Respuesta	Códigos HTTP
+GET	/api/health	Público. Verifica que la API y la conexión con MySQL estén activas.	Ninguno	{ ok: true, servicio: "lujo-lavadoras-api" }	200, 500
+POST	/api/auth/login	Público. Inicia sesión y devuelve el token JWT.	Body: correo, password	{ token, usuario: { id, nombre, correo, rol } }	200, 400, 401, 500
+GET	/api/auth/me	JWT. Devuelve el usuario autenticado.	Header Authorization: Bearer <token>	{ id, nombre, correo, rol }	200, 401, 500
+GET	/api/lavadoras	Público. Lista las lavadoras y permite filtrar.	Query opcional: estado, q	Array de lavadoras	200, 500
+GET	/api/lavadoras/:id	Público. Consulta una lavadora por su ID.	Ruta: id	Objeto lavadora	200, 404, 500
+GET	/api/lavadoras/:id/disponibilidad	Público. Indica si está libre en un rango de fechas.	Ruta: id · Query: inicio, fin (AAAA-MM-DD)	{ disponible: true / false }	200, 500
+POST	/api/lavadoras	Admin. Registra una lavadora.	Body: marca, modelo, referencia, precio_alquiler, estado (opcional)	Objeto lavadora creado	201, 400, 401, 403, 500
+PUT	/api/lavadoras/:id	Admin. Actualiza una lavadora.	Ruta: id · Body igual a POST	Objeto lavadora actualizado	200, 400, 401, 403, 404, 500
+DELETE	/api/lavadoras/:id	Admin. Elimina una lavadora.	Ruta: id	{ ok: true }	200, 401, 403, 404, 409, 500
+GET	/api/servicios	Público. Lista el catálogo de servicios adicionales.	Ninguno	Array de servicios	200, 500
+POST	/api/servicios	Admin. Crea un servicio adicional.	Body: nombre_servicio, descripcion, precio	Objeto servicio creado	201, 400, 401, 403, 500
+PUT	/api/servicios/:id	Admin. Actualiza un servicio.	Ruta: id · Body igual a POST	Objeto servicio actualizado	200, 400, 401, 403, 404, 500
+DELETE	/api/servicios/:id	Admin. Elimina un servicio.	Ruta: id	{ ok: true }	200, 401, 403, 404, 409, 500
+POST	/api/alquileres	Público. Registra la solicitud: crea o actualiza el cliente por cédula y reserva la lavadora.	Body: cliente { nombre, cedula, telefono, correo, direccion? }, idLavadora, fecha_inicio, fecha_fin	{ mensaje, alquiler }	201, 400, 404, 409, 500
+GET	/api/alquileres	Admin. Lista alquileres con días, total y datos de cliente y lavadora.	Query opcional: estado	Array con dias, total, cliente_nombre, cedula, marca, modelo	200, 401, 403, 500
+PATCH	/api/alquileres/:id/estado	Admin. Cambia el estado y sincroniza la lavadora.	Ruta: id · Body: estado (Pendiente, Activo, Finalizado, Cancelado)	Objeto alquiler actualizado	200, 400, 401, 403, 404, 500
+DELETE	/api/alquileres/:id	Admin. Elimina un alquiler y libera la lavadora.	Ruta: id	{ ok: true }	200, 401, 403, 404, 409, 500
+GET	/api/ordenes	Admin. Lista las órdenes con alquiler, cliente y servicio.	Ninguno	Array de órdenes	200, 401, 403, 500
+POST	/api/ordenes	Admin. Crea una orden asociada a un alquiler existente.	Body: idAlquiler, idTipo_servicio, estado (opcional), observaciones (opcional)	Objeto orden creado	201, 400, 401, 403, 404, 500
+PATCH	/api/ordenes/:id/estado	Admin. Cambia el estado y sincroniza alquiler y lavadora.	Ruta: id · Body: estado (Pendiente, En proceso, Completado, Cancelado), observaciones (opcional)	Objeto orden actualizado	200, 400, 401, 403, 404, 500
+DELETE	/api/ordenes/:id	Admin. Elimina una orden de servicio.	Ruta: id	{ ok: true }	200, 401, 403, 404, 500
+GET	/api/clientes	Admin. Lista los clientes con total y último alquiler.	Ninguno	Array con total_alquileres, ultimo_alquiler	200, 401, 403, 500
+POST	/api/clientes	Admin. Registra un cliente validando la cédula única.	Body: nombre, cedula, telefono, correo, direccion (opcional)	Objeto cliente creado	201, 400, 401, 403, 409, 500
+PUT	/api/clientes/:id	Admin. Actualiza un cliente.	Ruta: id · Body igual a POST	Objeto cliente actualizado	200, 400, 401, 403, 404, 409, 500
+DELETE	/api/clientes/:id	Admin. Elimina un cliente que no tenga alquileres.	Ruta: id	{ ok: true }	200, 401, 403, 404, 409, 500
+GET	/api/stats	Admin. Resumen del panel: conteos, ingreso estimado, estados y recientes.	Ninguno	{ lavadoras, disponibles, alquileres, pendientes, activos, clientes, ordenes_abiertas, ingreso_estimado, por_estado, recientes }	200, 401, 403, 500

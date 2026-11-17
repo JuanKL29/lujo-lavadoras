@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1180" viewBox="0 0 1600 1180" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="flecha" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+    </marker>
+  </defs>
+
+  <rect width="1600" height="1180" fill="#ffffff" />
+
+  <text x="800" y="42" text-anchor="middle" font-size="26" font-weight="bold" fill="#0f172a">
+    Diagrama de casos de uso — Sistema de alquiler de lavadoras
+  </text>
+  <text x="800" y="70" text-anchor="middle" font-size="16" fill="#475569">
+    Proyecto Lujo Lavadoras
+  </text>
+
+  <rect x="280" y="100" width="1000" height="1000" rx="16" fill="#f8fafc" stroke="#334155" stroke-width="2" />
+  <text x="780" y="132" text-anchor="middle" font-size="18" font-weight="bold" fill="#334155">
+    Sistema de alquiler de lavadoras
+  </text>
+
+  <!-- Asociaciones: Visitante -->
+  <line x1="160" y1="240" x2="520" y2="180" stroke="#334155" stroke-width="1.6" />
+  <line x1="160" y1="240" x2="520" y2="300" stroke="#334155" stroke-width="1.6" />
+
+  <!-- Asociación: WhatsApp -->
+  <line x1="160" y1="750" x2="520" y2="300" stroke="#334155" stroke-width="1.6" />
+
+  <!-- Asociaciones: Administrador (recorrido ortogonal para no cruzar elipses) -->
+  <line x1="1390" y1="600" x2="1200" y2="600" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="160" x2="1200" y2="1040" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="160" x2="1110" y2="160" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="270" x2="1155" y2="270" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="380" x2="1125" y2="380" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="490" x2="1125" y2="490" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="600" x2="1125" y2="600" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="710" x2="1125" y2="710" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="820" x2="1135" y2="820" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="930" x2="1160" y2="930" stroke="#334155" stroke-width="1.6" />
+  <line x1="1200" y1="1040" x2="1110" y2="1040" stroke="#334155" stroke-width="1.6" />
+
+  <!-- Relaciones include / extend -->
+  <line x1="835" y1="710" x2="670" y2="600" stroke="#475569" stroke-width="1.6" stroke-dasharray="7 5" marker-end="url(#flecha)" />
+  <line x1="835" y1="710" x2="680" y2="720" stroke="#475569" stroke-width="1.6" stroke-dasharray="7 5" marker-end="url(#flecha)" />
+  <line x1="670" y1="840" x2="835" y2="710" stroke="#475569" stroke-width="1.6" stroke-dasharray="7 5" marker-end="url(#flecha)" />
+
+  <rect x="715" y="638" width="76" height="18" fill="#f8fafc" opacity="0.95" />
+  <text x="753" y="651" text-anchor="middle" font-size="13" fill="#475569">«include»</text>
+
+  <rect x="720" y="705" width="76" height="18" fill="#f8fafc" opacity="0.95" />
+  <text x="758" y="718" text-anchor="middle" font-size="13" fill="#475569">«include»</text>
+
+  <rect x="715" y="756" width="76" height="18" fill="#f8fafc" opacity="0.95" />
+  <text x="753" y="769" text-anchor="middle" font-size="13" fill="#475569">«extend»</text>
+
+  <!-- Casos de uso públicos -->
+  <ellipse cx="520" cy="180" rx="150" ry="45" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="520" y="180" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="520" dy="-8">Ver página</tspan>
+    <tspan x="520" dy="20">informativa</tspan>
+  </text>
+
+  <ellipse cx="520" cy="300" rx="160" ry="45" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="520" y="300" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="520" dy="-8">Contactar por</tspan>
+    <tspan x="520" dy="20">WhatsApp</tspan>
+  </text>
+
+  <!-- Casos de uso del administrador -->
+  <ellipse cx="980" cy="160" rx="130" ry="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="160" text-anchor="middle" dominant-baseline="middle" font-size="15" fill="#0f172a">Iniciar sesión</text>
+
+  <ellipse cx="980" cy="270" rx="175" ry="45" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="270" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="980" dy="-8">Consultar resumen</tspan>
+    <tspan x="980" dy="20">y estadísticas</tspan>
+  </text>
+
+  <ellipse cx="980" cy="380" rx="145" ry="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="380" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="980" dy="-8">Gestionar</tspan>
+    <tspan x="980" dy="20">lavadoras</tspan>
+  </text>
+
+  <ellipse cx="980" cy="490" rx="145" ry="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="490" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="980" dy="-8">Gestionar</tspan>
+    <tspan x="980" dy="20">servicios</tspan>
+  </text>
+
+  <ellipse cx="980" cy="600" rx="145" ry="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="600" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="980" dy="-8">Gestionar</tspan>
+    <tspan x="980" dy="20">clientes</tspan>
+  </text>
+
+  <ellipse cx="980" cy="710" rx="145" ry="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="710" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="980" dy="-8">Registrar</tspan>
+    <tspan x="980" dy="20">alquiler</tspan>
+  </text>
+
+  <ellipse cx="980" cy="820" rx="155" ry="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="820" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="980" dy="-8">Gestionar</tspan>
+    <tspan x="980" dy="20">alquileres</tspan>
+  </text>
+
+  <ellipse cx="980" cy="930" rx="180" ry="45" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="930" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="980" dy="-8">Gestionar órdenes</tspan>
+    <tspan x="980" dy="20">de servicio</tspan>
+  </text>
+
+  <ellipse cx="980" cy="1040" rx="130" ry="42" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+  <text x="980" y="1040" text-anchor="middle" dominant-baseline="middle" font-size="15" fill="#0f172a">Cerrar sesión</text>
+
+  <!-- Casos de uso incluidos / extendidos -->
+  <ellipse cx="520" cy="600" rx="150" ry="45" fill="#eff6ff" stroke="#60a5fa" stroke-width="2" />
+  <text x="520" y="600" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="520" dy="-8">Validar</tspan>
+    <tspan x="520" dy="20">disponibilidad</tspan>
+  </text>
+
+  <ellipse cx="520" cy="720" rx="160" ry="45" fill="#eff6ff" stroke="#60a5fa" stroke-width="2" />
+  <text x="520" y="720" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="520" dy="-8">Crear o actualizar</tspan>
+    <tspan x="520" dy="20">cliente</tspan>
+  </text>
+
+  <ellipse cx="520" cy="840" rx="150" ry="45" fill="#eff6ff" stroke="#60a5fa" stroke-width="2" />
+  <text x="520" y="840" text-anchor="middle" font-size="15" fill="#0f172a">
+    <tspan x="520" dy="-8">Crear orden</tspan>
+    <tspan x="520" dy="20">de servicio</tspan>
+  </text>
+
+  <!-- Actor Visitante -->
+  <g stroke="#0f172a" stroke-width="2" stroke-linecap="round" fill="none">
+    <circle cx="130" cy="205" r="15" fill="#ffffff" />
+    <line x1="130" y1="220" x2="130" y2="270" />
+    <line x1="100" y1="240" x2="160" y2="240" />
+    <line x1="130" y1="270" x2="110" y2="305" />
+    <line x1="130" y1="270" x2="150" y2="305" />
+  </g>
+  <text x="130" y="330" text-anchor="middle" font-size="17" font-weight="bold" fill="#0f172a">Visitante</text>
+  <text x="130" y="350" text-anchor="middle" font-size="13" fill="#475569">(Cliente)</text>
+
+  <!-- Actor WhatsApp -->
+  <g stroke="#0f172a" stroke-width="2" stroke-linecap="round" fill="none">
+    <circle cx="130" cy="715" r="15" fill="#ffffff" />
+    <line x1="130" y1="730" x2="130" y2="780" />
+    <line x1="100" y1="750" x2="160" y2="750" />
+    <line x1="130" y1="780" x2="110" y2="815" />
+    <line x1="130" y1="780" x2="150" y2="815" />
+  </g>
+  <text x="130" y="840" text-anchor="middle" font-size="17" font-weight="bold" fill="#0f172a">WhatsApp</text>
+  <text x="130" y="860" text-anchor="middle" font-size="13" fill="#475569">(Sistema externo)</text>
+
+  <!-- Actor Administrador -->
+  <g stroke="#0f172a" stroke-width="2" stroke-linecap="round" fill="none">
+    <circle cx="1420" cy="565" r="15" fill="#ffffff" />
+    <line x1="1420" y1="580" x2="1420" y2="630" />
+    <line x1="1390" y1="600" x2="1450" y2="600" />
+    <line x1="1420" y1="630" x2="1400" y2="665" />
+    <line x1="1420" y1="630" x2="1440" y2="665" />
+  </g>
+  <text x="1420" y="690" text-anchor="middle" font-size="17" font-weight="bold" fill="#0f172a">Administrador</text>
+  <text x="1420" y="710" text-anchor="middle" font-size="13" fill="#475569">(Dueño)</text>
+
+  <text x="40" y="1140" font-size="13" fill="#475569">
+    «include» = comportamiento obligatorio del caso de uso base. «extend» = comportamiento opcional.
+  </text>
+</svg>

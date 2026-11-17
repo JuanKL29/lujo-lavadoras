@@ -1,0 +1,64 @@
+<section class="login-page">
+  <div class="login-card card">
+    <a routerLink="/" class="login-brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect x="3.5" y="2.5" width="25" height="27" rx="6" stroke="currentColor" stroke-width="1.7" />
+          <circle cx="16" cy="18" r="7" stroke="currentColor" stroke-width="1.7" />
+          <circle cx="16" cy="18" r="3" fill="currentColor" />
+          <circle cx="9.5" cy="7.5" r="1.4" fill="currentColor" />
+          <path d="M21 7.5h4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span class="brand-name">Lujo<span>Lavadoras</span></span>
+    </a>
+
+    <h1>Panel administrativo</h1>
+    <p class="muted">Ingresa con tu cuenta para gestionar lavadoras, alquileres y órdenes.</p>
+
+    <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+      <div class="field">
+        <label for="correo">Correo</label>
+        <input
+          id="correo"
+          type="email"
+          formControlName="correo"
+          autocomplete="username"
+          placeholder="admin@lujolavadoras.com"
+        />
+        @if (form.controls.correo.touched && form.controls.correo.invalid) {
+          <span class="error">Escribe un correo válido.</span>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+          placeholder="••••••••"
+        />
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <span class="error">Escribe tu contraseña.</span>
+        }
+      </div>
+
+      @if (error()) {
+        <p class="alert alert--error">{{ error() }}</p>
+      }
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="enviando()">
+        {{ enviando() ? 'Ingresando…' : 'Ingresar' }}
+      </button>
+    </form>
+
+    <p class="login-hint">
+      Usuario de prueba: <strong>admin&#64;lujolavadoras.com</strong> · contraseña
+      <strong>admin123</strong>
+    </p>
+
+    <a routerLink="/" class="btn-link">← Volver a la página</a>
+  </div>
+</section>

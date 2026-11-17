@@ -1,0 +1,1824 @@
+{
+    "info":  {
+                 "name":  "Lujo Lavadoras - Demo HTTP",
+                 "description":  "Demostración de GET, POST, PUT, PATCH y DELETE contra la API de Lujo Lavadoras. Ejecuta las carpetas en orden: 1, 2, 3, 4, 5 y 6.",
+                 "schema":  "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+             },
+    "variable":  [
+                     {
+                         "key":  "baseUrl",
+                         "value":  "http://127.0.0.1:3000"
+                     },
+                     {
+                         "key":  "token",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "idLavadora",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "idServicio",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "idAlquiler",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "idOrden",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "cedula",
+                         "value":  "1099887766"
+                     },
+                     {
+                         "key":  "idCliente",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "idAlquiler2",
+                         "value":  ""
+                     },
+                     {
+                         "key":  "idComentario",
+                         "value":  ""
+                     }
+                 ],
+    "item":  [
+                 {
+                     "name":  "1. GET - Lectura",
+                     "item":  [
+                                  {
+                                      "name":  "Health - GET /api/health",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/health",
+                                                      "description":  "Comprueba que el backend y MySQL estén respondiendo."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Listar lavadoras - GET /api/lavadoras",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/lavadoras",
+                                                      "description":  "Devuelve todas las lavadoras registradas."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Lavadoras filtradas - GET /api/lavadoras?estado=Disponible\u0026q=LG",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Devuelve un arreglo\u0027, function () { pm.expect(pm.response.json()).to.be.an(\u0027array\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/lavadoras?estado=Disponible\u0026q=LG",
+                                                      "description":  "Comprueba los filtros por estado y texto del listado de lavadoras."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Ver lavadora 1 - GET /api/lavadoras/1",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/lavadoras/1",
+                                                      "description":  "Consulta un recurso concreto por su id."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Lavadora inexistente - GET /api/lavadoras/9999",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027404 Not Found\u0027, function () { pm.response.to.have.status(404); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/lavadoras/9999",
+                                                      "description":  "Caso negativo: el recurso no existe."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Listar servicios - GET /api/servicios",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/servicios",
+                                                      "description":  "Estos son los servicios que se muestran en la página pública."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Disponibilidad - GET /api/lavadoras/1/disponibilidad",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/lavadoras/1/disponibilidad?inicio=2026-12-01\u0026fin=2026-12-05",
+                                                      "description":  "Consulta si una lavadora está libre en un rango de fechas."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Disponibilidad sin fechas - GET /api/lavadoras/1/disponibilidad",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Disponible\u0027, function () { pm.expect(pm.response.json().disponible).to.eql(true); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/lavadoras/1/disponibilidad",
+                                                      "description":  "Sin fechas, la API responde que la lavadora está disponible."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Stats sin token - GET /api/stats",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027401 Unauthorized\u0027, function () { pm.response.to.have.status(401); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/stats",
+                                                      "description":  "Caso negativo: ruta protegida sin token."
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "2. POST - Crear",
+                     "item":  [
+                                  {
+                                      "name":  "Login - POST /api/auth/login",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.collectionVariables.set(\u0027token\u0027, pm.response.json().token);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"correo\": \"admin@lujolavadoras.com\",\n  \"password\": \"admin123\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/auth/login",
+                                                      "description":  "Guarda el token automáticamente en la variable {{token}}."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Stats con token - GET /api/stats",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/stats",
+                                                      "description":  "Ruta protegida con el token obtenido en el login."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Perfil - GET /api/auth/me",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Correo del administrador\u0027, function () { pm.expect(pm.response.json().correo).to.eql(\u0027admin@lujolavadoras.com\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/auth/me",
+                                                      "description":  "Devuelve el usuario autenticado a partir del token.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Crear lavadora sin token - POST /api/lavadoras",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027401 Unauthorized\u0027, function () { pm.response.to.have.status(401); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"marca\": \"Prueba\",\n  \"modelo\": \"Demo HTTP\",\n  \"referencia\": \"TEST-HTTP-01\",\n  \"precio_alquiler\": 100000,\n  \"estado\": \"Disponible\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/lavadoras",
+                                                      "description":  "Caso negativo: sin token no se puede crear."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Crear lavadora - POST /api/lavadoras",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027201 Created\u0027, function () { pm.response.to.have.status(201); });",
+                                                                                    "pm.collectionVariables.set(\u0027idLavadora\u0027, pm.response.json().id_lavadora);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"marca\": \"Prueba\",\n  \"modelo\": \"Demo HTTP\",\n  \"referencia\": \"TEST-HTTP-01\",\n  \"precio_alquiler\": 100000,\n  \"estado\": \"Disponible\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/lavadoras",
+                                                      "description":  "Crea una lavadora de prueba y guarda su id en {{idLavadora}}."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Crear servicio - POST /api/servicios",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027201 Created\u0027, function () { pm.response.to.have.status(201); });",
+                                                                                    "pm.collectionVariables.set(\u0027idServicio\u0027, pm.response.json().id_tipo_servicio);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"nombre_servicio\": \"Servicio de prueba HTTP\",\n  \"descripcion\": \"Creado para la demostración de métodos HTTP\",\n  \"precio\": 15000\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/servicios",
+                                                      "description":  "Crea un servicio de prueba y guarda su id en {{idServicio}}."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Crear alquiler - POST /api/alquileres",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027201 Created\u0027, function () { pm.response.to.have.status(201); });",
+                                                                                    "pm.collectionVariables.set(\u0027idAlquiler\u0027, pm.response.json().alquiler.id_alquiler);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"cliente\": {\n    \"nombre\": \"Cliente Prueba HTTP\",\n    \"cedula\": \"1099887766\",\n    \"telefono\": \"3001234567\",\n    \"correo\": \"prueba@http.com\",\n    \"direccion\": \"Calle 1 # 2-3\"\n  },\n  \"idLavadora\": {{idLavadora}},\n  \"fecha_inicio\": \"2026-12-01\",\n  \"fecha_fin\": \"2026-12-05\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres",
+                                                      "description":  "Crea el cliente si no existe y registra el alquiler. Guarda {{idAlquiler}}."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Alquiler cliente existente - POST /api/alquileres",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027201 Created\u0027, function () { pm.response.to.have.status(201); });",
+                                                                                    "pm.collectionVariables.set(\u0027idAlquiler2\u0027, pm.response.json().alquiler.id_alquiler);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"cliente\": {\n    \"nombre\": \"Cliente Prueba HTTP\",\n    \"cedula\": \"1099887766\",\n    \"telefono\": \"3001234567\",\n    \"correo\": \"prueba@http.com\",\n    \"direccion\": \"Calle 1 # 2-3\"\n  },\n  \"idLavadora\": {{idLavadora}},\n  \"fecha_inicio\": \"2026-12-10\",\n  \"fecha_fin\": \"2026-12-12\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres",
+                                                      "description":  "Repite el alquiler con la misma cédula para comprobar la reutilización del cliente. Guarda {{idAlquiler2}}."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Alquiler solapado - POST /api/alquileres",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027409 Conflict\u0027, function () { pm.response.to.have.status(409); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"cliente\": {\n    \"nombre\": \"Cliente Prueba HTTP\",\n    \"cedula\": \"1099887766\",\n    \"telefono\": \"3001234567\",\n    \"correo\": \"prueba@http.com\"\n  },\n  \"idLavadora\": {{idLavadora}},\n  \"fecha_inicio\": \"2026-12-02\",\n  \"fecha_fin\": \"2026-12-06\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres",
+                                                      "description":  "Caso negativo: la lavadora ya está ocupada en esas fechas."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Crear orden - POST /api/ordenes",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027201 Created\u0027, function () { pm.response.to.have.status(201); });",
+                                                                                    "pm.collectionVariables.set(\u0027idOrden\u0027, pm.response.json().id_orden_servicio);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"idAlquiler\": {{idAlquiler}},\n  \"idTipo_servicio\": {{idServicio}},\n  \"estado\": \"Pendiente\",\n  \"observaciones\": \"Orden de prueba HTTP\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/ordenes",
+                                                      "description":  "Crea la orden de servicio asociada al alquiler y guarda {{idOrden}}."
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "3. PUT - Actualizar completo",
+                     "item":  [
+                                  {
+                                      "name":  "Actualizar lavadora - PUT /api/lavadoras/{{idLavadora}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Modelo actualizado\u0027, function () { pm.expect(pm.response.json().modelo).to.eql(\u0027Demo HTTP actualizada\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PUT",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"marca\": \"Prueba\",\n  \"modelo\": \"Demo HTTP actualizada\",\n  \"referencia\": \"TEST-HTTP-01\",\n  \"precio_alquiler\": 110000,\n  \"estado\": \"Disponible\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+                                                      "description":  "PUT reemplaza todos los campos del recurso."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Actualizar servicio - PUT /api/servicios/{{idServicio}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Nombre actualizado\u0027, function () { pm.expect(pm.response.json().nombre_servicio).to.eql(\u0027Servicio de prueba HTTP (actualizado)\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PUT",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"nombre_servicio\": \"Servicio de prueba HTTP (actualizado)\",\n  \"descripcion\": \"Servicio actualizado con PUT para la demostración\",\n  \"precio\": 18000\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/servicios/{{idServicio}}",
+                                                      "description":  "PUT reemplaza nombre, descripción y precio del servicio."
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "4. PATCH - Actualizar parcial",
+                     "item":  [
+                                  {
+                                      "name":  "Activar alquiler - PATCH /api/alquileres/{{idAlquiler}}/estado",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Estado Activo\u0027, function () { pm.expect(pm.response.json().estado).to.eql(\u0027Activo\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PATCH",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"estado\": \"Activo\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres/{{idAlquiler}}/estado",
+                                                      "description":  "PATCH cambia solo el estado. Además actualiza el estado de la lavadora a Alquilada."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Alquileres activos - GET /api/alquileres?estado=Activo",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Devuelve un arreglo\u0027, function () { pm.expect(pm.response.json()).to.be.an(\u0027array\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/alquileres?estado=Activo",
+                                                      "description":  "Comprueba el filtro por estado del listado de alquileres.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Orden en proceso - PATCH /api/ordenes/{{idOrden}}/estado",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Estado En proceso\u0027, function () { pm.expect(pm.response.json().estado).to.eql(\u0027En proceso\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PATCH",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"estado\": \"En proceso\",\n  \"observaciones\": \"Orden actualizada con PATCH\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/ordenes/{{idOrden}}/estado",
+                                                      "description":  "PATCH cambia el estado de la orden y opcionalmente las observaciones."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Estado inválido - PATCH /api/alquileres/{{idAlquiler}}/estado",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027400 Bad Request\u0027, function () { pm.response.to.have.status(400); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PATCH",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"estado\": \"Volando\"\n}"
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres/{{idAlquiler}}/estado",
+                                                      "description":  "Caso negativo: estado no permitido."
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "5. DELETE - Eliminar",
+                     "item":  [
+                                  {
+                                      "name":  "Eliminar orden - DELETE /api/ordenes/{{idOrden}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/ordenes/{{idOrden}}",
+                                                      "description":  "Primero se elimina la orden porque tiene una clave foránea hacia el alquiler."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar orden otra vez - DELETE /api/ordenes/{{idOrden}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027404 Not Found\u0027, function () { pm.response.to.have.status(404); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/ordenes/{{idOrden}}",
+                                                      "description":  "Caso negativo: ya no existe."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar lavadora con alquiler - DELETE /api/lavadoras/{{idLavadora}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027409 Conflict\u0027, function () { pm.response.to.have.status(409); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+                                                      "description":  "Caso negativo: la lavadora todavía tiene un alquiler asociado (clave foránea)."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar alquiler 2 - DELETE /api/alquileres/{{idAlquiler2}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres/{{idAlquiler2}}",
+                                                      "description":  "Elimina el alquiler del cliente recurrente."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar alquiler - DELETE /api/alquileres/{{idAlquiler}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres/{{idAlquiler}}",
+                                                      "description":  "Al eliminar el alquiler, la lavadora vuelve a Disponible."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar servicio - DELETE /api/servicios/{{idServicio}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/servicios/{{idServicio}}",
+                                                      "description":  "Elimina el servicio de prueba."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar lavadora - DELETE /api/lavadoras/{{idLavadora}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+                                                      "description":  "Elimina la lavadora de prueba."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar lavadora otra vez - DELETE /api/lavadoras/{{idLavadora}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027404 Not Found\u0027, function () { pm.response.to.have.status(404); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/lavadoras/{{idLavadora}}",
+                                                      "description":  "Caso negativo: ya no existe."
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "6. Verificación",
+                     "item":  [
+                                  {
+                                      "name":  "Clientes registrados - GET /api/clientes",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/clientes",
+                                                      "description":  "Al final debe quedar solo el cliente de prueba; se borra por SQL porque no hay DELETE /api/clientes."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Alquileres - GET /api/alquileres",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/alquileres",
+                                                      "description":  "Debe quedar vacío después de la limpieza."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Órdenes - GET /api/ordenes",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+
+                                                                 ],
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "url":  "{{baseUrl}}/api/ordenes",
+                                                      "description":  "Debe quedar vacío después de la limpieza."
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "7. Clientes (CRUD)",
+                     "item":  [
+                                  {
+                                      "name":  "Crear cliente - POST /api/clientes",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027201 Created\u0027, function () { pm.response.to.have.status(201); });",
+                                                                                    "pm.collectionVariables.set(\u0027idCliente\u0027, pm.response.json().id_cliente);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/clientes",
+                                                      "description":  "Crea un cliente de prueba y guarda {{idCliente}}.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"nombre\": \"Cliente CRUD HTTP\",\n  \"cedula\": \"1099887700\",\n  \"telefono\": \"3009876543\",\n  \"correo\": \"crud@http.com\",\n  \"direccion\": \"Calle 9 # 8-7\"\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Cliente duplicado - POST /api/clientes",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027409 Conflict\u0027, function () { pm.response.to.have.status(409); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/clientes",
+                                                      "description":  "La cédula ya existe: la API rechaza el duplicado con 409.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"nombre\": \"Cliente CRUD HTTP\",\n  \"cedula\": \"1099887700\",\n  \"telefono\": \"3009876543\",\n  \"correo\": \"crud@http.com\"\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Cédula inválida - POST /api/clientes",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027400 Bad Request\u0027, function () { pm.response.to.have.status(400); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/clientes",
+                                                      "description":  "La cédula debe tener entre 5 y 10 dígitos.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"nombre\": \"Cliente CRUD HTTP\",\n  \"cedula\": \"123\",\n  \"telefono\": \"3009876543\",\n  \"correo\": \"crud@http.com\"\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Actualizar cliente - PUT /api/clientes/{{idCliente}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Nombre actualizado\u0027, function () { pm.expect(pm.response.json().nombre).to.eql(\u0027Cliente CRUD actualizado\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PUT",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/clientes/{{idCliente}}",
+                                                      "description":  "Actualiza los datos del cliente de prueba.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\n  \"nombre\": \"Cliente CRUD actualizado\",\n  \"cedula\": \"1099887700\",\n  \"telefono\": \"3009876543\",\n  \"correo\": \"crud@http.com\",\n  \"direccion\": \"Calle 10 # 11-12\"\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar cliente - DELETE /api/clientes/{{idCliente}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/clientes/{{idCliente}}",
+                                                      "description":  "Elimina el cliente de prueba.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar cliente otra vez - DELETE /api/clientes/{{idCliente}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027404 Not Found\u0027, function () { pm.response.to.have.status(404); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/clientes/{{idCliente}}",
+                                                      "description":  "El cliente ya no existe: responde 404.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               }
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "8. Comentarios (moderación)",
+                     "item":  [
+                                  {
+                                      "name":  "Ver comentarios públicos - GET /api/comentarios",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Devuelve un arreglo\u0027, function () { pm.expect(pm.response.json()).to.be.an(\u0027array\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios",
+                                                      "description":  "Solo devuelve los comentarios aprobados (visible = 1)."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Crear comentario - POST /api/comentarios",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027201 Created\u0027, function () { pm.response.to.have.status(201); });",
+                                                                                    "pm.test(\u0027Queda pendiente de aprobación\u0027, function () { pm.expect(pm.response.json().visible).to.eql(false); });",
+                                                                                    "pm.collectionVariables.set(\u0027idComentario\u0027, pm.response.json().id_comentario);"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios",
+                                                      "description":  "Cualquier visitante puede enviarlo; queda pendiente de aprobación y guarda {{idComentario}}.",
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\r\n    \"nombre\":  \"Cliente HTTP\",\r\n    \"correo\":  \"comentario@http.com\",\r\n    \"comentario\":  \"Comentario de prueba para la cobertura automatizada.\",\r\n    \"calificacion\":  5\r\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Comentario oculto en público - GET /api/comentarios",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027El comentario pendiente no aparece\u0027, function () { pm.expect(pm.response.json().map(function (c) { return c.id_comentario; })).to.not.include(Number(pm.collectionVariables.get(\u0027idComentario\u0027))); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios",
+                                                      "description":  "El comentario recién creado no debe aparecer hasta que el administrador lo apruebe."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Comentario inválido - POST /api/comentarios",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027400 Bad Request\u0027, function () { pm.response.to.have.status(400); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios",
+                                                      "description":  "La calificación debe estar entre 1 y 5: la API responde 400.",
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\r\n    \"nombre\":  \"Cliente HTTP\",\r\n    \"correo\":  \"comentario@http.com\",\r\n    \"comentario\":  \"Comentario con calificacion fuera de rango.\",\r\n    \"calificacion\":  9\r\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Comentarios admin sin token - GET /api/comentarios/admin",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027401 Unauthorized\u0027, function () { pm.response.to.have.status(401); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios/admin",
+                                                      "description":  "La moderación exige token: sin él responde 401."
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Comentarios admin - GET /api/comentarios/admin",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Devuelve un arreglo\u0027, function () { pm.expect(pm.response.json()).to.be.an(\u0027array\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "GET",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios/admin",
+                                                      "description":  "Con token devuelve todos los comentarios, incluidos los pendientes.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Aprobar comentario - PATCH /api/comentarios/{{idComentario}}/visible",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Queda visible\u0027, function () { pm.expect(pm.response.json().visible).to.eql(true); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PATCH",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios/{{idComentario}}/visible",
+                                                      "description":  "El administrador lo hace visible en la página pública.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\r\n    \"visible\":  true\r\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Visible inválido - PATCH /api/comentarios/{{idComentario}}/visible",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027400 Bad Request\u0027, function () { pm.response.to.have.status(400); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "PATCH",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios/{{idComentario}}/visible",
+                                                      "description":  "El campo visible debe ser booleano: la API responde 400.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               },
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\r\n    \"visible\":  \"si\"\r\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar comentario - DELETE /api/comentarios/{{idComentario}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027200 OK\u0027, function () { pm.response.to.have.status(200); });",
+                                                                                    "pm.test(\u0027Confirma la eliminación\u0027, function () { pm.expect(pm.response.json().ok).to.eql(true); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios/{{idComentario}}",
+                                                      "description":  "Borra el comentario de prueba y deja la base como estaba.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Eliminar comentario otra vez - DELETE /api/comentarios/{{idComentario}}",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027404 Not Found\u0027, function () { pm.response.to.have.status(404); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "DELETE",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios/{{idComentario}}",
+                                                      "description":  "El comentario ya no existe: responde 404.",
+                                                      "auth":  {
+                                                                   "type":  "bearer",
+                                                                   "bearer":  [
+                                                                                  {
+                                                                                      "key":  "token",
+                                                                                      "value":  "{{token}}",
+                                                                                      "type":  "string"
+                                                                                  }
+                                                                              ]
+                                                               }
+                                                  }
+                                  }
+                              ]
+                 },
+                 {
+                     "name":  "9. Validaciones de entrada",
+                     "item":  [
+                                  {
+                                      "name":  "Comentario sin campos - POST /api/comentarios",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027400 Bad Request\u0027, function () { pm.response.to.have.status(400); });",
+                                                                                    "pm.test(\u0027Indica los campos faltantes\u0027, function () { pm.expect(pm.response.json().error).to.include(\u0027Faltan campos obligatorios\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/comentarios",
+                                                      "description":  "Sin comentario ni calificación: la API responde 400 e indica qué falta.",
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\r\n    \"nombre\":  \"Cliente HTTP\"\r\n}"
+                                                               }
+                                                  }
+                                  },
+                                  {
+                                      "name":  "Alquiler con fecha inválida - POST /api/alquileres",
+                                      "event":  [
+                                                    {
+                                                        "listen":  "test",
+                                                        "script":  {
+                                                                       "type":  "text/javascript",
+                                                                       "exec":  [
+                                                                                    "pm.test(\u0027400 Bad Request\u0027, function () { pm.response.to.have.status(400); });",
+                                                                                    "pm.test(\u0027Explica el formato esperado\u0027, function () { pm.expect(pm.response.json().error).to.include(\u0027AAAA-MM-DD\u0027); });"
+                                                                                ]
+                                                                   }
+                                                    }
+                                                ],
+                                      "request":  {
+                                                      "method":  "POST",
+                                                      "header":  [
+                                                                     {
+                                                                         "key":  "Content-Type",
+                                                                         "value":  "application/json"
+                                                                     }
+                                                                 ],
+                                                      "url":  "{{baseUrl}}/api/alquileres",
+                                                      "description":  "La fecha debe venir como AAAA-MM-DD: el formato 05/12/2026 responde 400 antes de tocar la base.",
+                                                      "body":  {
+                                                                   "mode":  "raw",
+                                                                   "raw":  "{\r\n    \"cliente\":  {\r\n                    \"nombre\":  \"Cliente HTTP\",\r\n                    \"cedula\":  \"1099887701\",\r\n                    \"telefono\":  \"3009876543\",\r\n                    \"correo\":  \"fecha@http.com\"\r\n                },\r\n    \"idLavadora\":  1,\r\n    \"fecha_inicio\":  \"05/12/2026\",\r\n    \"fecha_fin\":  \"2026-12-10\"\r\n}"
+                                                               }
+                                                  }
+                                  }
+                              ]
+                 }
+             ]
+}

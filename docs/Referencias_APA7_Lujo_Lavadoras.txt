@@ -1,0 +1,21 @@
+Angular. (s. f.). Angular documentation. https://angular.dev/
+Balvín Landeo, A. E. (2017). Implementación de un sistema web para la valorización de equipos mayores y menores en la división de construcción civil de Graña y Montero [Tesis de grado, Universidad San Ignacio de Loyola]. Repositorio USIL. https://hdl.handle.net/20.500.14005/2870
+Delgado Claros, V. M., & Parra Villalobos, C. R. (2007). Análisis, diseño e implementación de un sistema de información con aplicación en internet para la gestión del área de mercadeo en la línea de alquileres y ventas de campamentos y equipos petroleros, aplicado a J'S Servipetrol Ltda. [Trabajo de grado, Universidad Industrial de Santander]. Repositorio Institucional UIS. https://noesis.uis.edu.co/handle/20.500.14071/19869
+Díaz Rodríguez, J. S. (2021). Diseño e implementación de un sistema de gestión para alquiler y soporte de cómputo distribuido para la empresa Sinapptic SAS [Trabajo de grado, Universidad Distrital Francisco José de Caldas]. Repositorio UDFJC. https://hdl.handle.net/11349/29358
+Express. (s. f.). Express.js documentation. https://expressjs.com/
+Gallardo Hernández, L. F. (2025). Desarrollo de un modelo de negocio para el alquiler de equipos y maquinaria de construcción certificados [Tesis de maestría, Corporación Universidad de la Costa]. REDICUC. https://hdl.handle.net/11323/14549
+Grafana Labs. (s. f.). k6 documentation. https://grafana.com/docs/k6/latest/
+ISO/IEC. (2011). Systems and software engineering — Systems and software Quality Requirements and Evaluation (SQuaRE) — System and software quality models (ISO/IEC 25010:2011). https://www.iso.org/standard/35733.html
+Jativa Álvarez, A. L. (2025). Página web de gestión de alquiler de vehículos [Trabajo de titulación, Pontificia Universidad Católica del Ecuador]. Repositorio PUCE. https://repositorio.puce.edu.ec/handle/123456789/48971
+Jones, M., Bradley, J., & Sakimura, N. (2015). JSON Web Token (JWT) (RFC 7519). Internet Engineering Task Force. https://doi.org/10.17487/RFC7519
+La Rosa Montero, N. P. (2025). Desarrollo de un sistema web para la gestión de alquiler de equipos de esquí y reservas de clases de esquí [Trabajo de fin de máster, Universidad Politécnica de Madrid]. Archivo Digital UPM. https://oa.upm.es/90137
+Londoño Cuartas, S. (2010). Diseño conceptual de un sistema de información para una pyme (Caso Pinturas & Contratos Ltda) [Trabajo de grado, Universidad EIA]. Repositorio Institucional EIA. https://repository.eia.edu.co/handle/11190/1575
+Node.js. (s. f.). Node.js documentation. https://nodejs.org/docs/latest/api/
+Oracle. (s. f.). MySQL 8.0 reference manual. https://dev.mysql.com/doc/refman/8.0/en/
+OWASP Foundation. (2021). OWASP Top 10:2021. https://owasp.org/Top10/
+Postman. (s. f.). Postman learning center. https://learning.postman.com/docs/
+Pressman, R. S., & Maxim, B. R. (2020). Software engineering: A practitioner's approach (9th ed.). McGraw-Hill Education.
+Ramos Salpetrier, J. E. (2022). Implementación de un sistema de gestión de atención al cliente en la lavandería San Alfonso - Piura; 2020 [Tesis de grado, Universidad Católica Los Ángeles de Chimbote]. Repositorio ULADECH. https://hdl.handle.net/20.500.13032/31064
+Salas Yupanqui, J. (2025). Plataforma integral que gestione el alquiler y venta de equipos de construcción [Trabajo de grado, Instituto de Educación Superior Privado IDAT]. Repositorio IDAT. https://hdl.handle.net/20.500.14364/300
+Sommerville, I. (2016). Software engineering (10th ed.). Pearson.
+Vera Yánez, C. M. (2019). Desarrollo e implementación de un sistema web para el control de inventario y alquiler de maquinarias de la empresa Megarient S.A. [Trabajo de grado, Universidad Politécnica Salesiana]. Repositorio Institucional UPS. https://dspace.ups.edu.ec/handle/123456789/17525
