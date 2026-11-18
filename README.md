@@ -2,7 +2,7 @@
 
 Landing page + panel de administración para alquilar lavadoras. Proyecto universitario, ligero y sin librerías de UI.
 
-**Repositorio:** <https://github.com/JuanKL29/lujo-lavadoras> (privado)
+**Repositorio:** <https://github.com/JuanKL29/lujo-lavadoras> (público)
 
 ```bash
 git clone https://github.com/JuanKL29/lujo-lavadoras.git
