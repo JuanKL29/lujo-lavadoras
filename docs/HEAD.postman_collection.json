@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "Lujo Lavadoras - HEAD",
+    "description": "Pruebas del método HEAD. HEAD es idéntico a GET pero sin cuerpo: devuelve el mismo estado y las mismas cabeceras. La API no declara rutas HEAD; Express las resuelve con los manejadores GET.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:3000"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Comparación GET vs HEAD",
+      "item": [
+        {
+          "name": "GET /api/lavadoras (guarda Content-Length)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('El GET devuelve cuerpo con datos', function () { pm.expect(pm.response.text().length).to.be.above(0); });",
+                  "pm.collectionVariables.set('lenGet', pm.response.headers.get('Content-Length'));",
+                  "console.log('Content-Length del GET: ' + pm.response.headers.get('Content-Length') + ' bytes');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/lavadoras",
+            "description": "Petición de referencia: se guarda el tamaño del cuerpo para compararlo con HEAD."
+          }
+        },
+        {
+          "name": "HEAD /api/lavadoras (mismas cabeceras, sin cuerpo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('La respuesta no tiene cuerpo', function () { pm.expect(pm.response.text()).to.eql(''); });",
+                  "pm.test('Conserva el Content-Type JSON', function () { pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'); });",
+                  "pm.test('Mismo Content-Length que el GET', function () { pm.expect(pm.response.headers.get('Content-Length')).to.eql(pm.collectionVariables.get('lenGet')); });",
+                  "console.log('Content-Length del HEAD: ' + pm.response.headers.get('Content-Length') + ' bytes, cuerpo vacío');"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": "{{baseUrl}}/api/lavadoras",
+            "description": "Express responde a HEAD con el mismo manejador del GET y descarta el cuerpo."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. HEAD solo existe donde hay GET",
+      "item": [
+        {
+          "name": "HEAD /api/health (existe GET) - 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Sin cuerpo', function () { pm.expect(pm.response.text()).to.eql(''); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": "{{baseUrl}}/api/health",
+            "description": "La ruta tiene GET, así que HEAD también responde."
+          }
+        },
+        {
+          "name": "HEAD /api/auth/login (solo POST) - 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404 Not Found', function () { pm.response.to.have.status(404); });",
+                  "pm.test('Sin cuerpo', function () { pm.expect(pm.response.text()).to.eql(''); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": "{{baseUrl}}/api/auth/login",
+            "description": "En esa ruta solo hay POST; sin GET no hay HEAD automático."
+          }
+        },
+        {
+          "name": "HEAD /api/lavadoras/9999 (no existe) - 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404 Not Found', function () { pm.response.to.have.status(404); });",
+                  "pm.test('Sin cuerpo', function () { pm.expect(pm.response.text()).to.eql(''); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": "{{baseUrl}}/api/lavadoras/9999",
+            "description": "El id no existe: se conserva el código de error pero se omite el JSON."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. HEAD con autenticación",
+      "item": [
+        {
+          "name": "HEAD /api/stats sin token - 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401 Unauthorized', function () { pm.response.to.have.status(401); });",
+                  "pm.test('Sin cuerpo, aunque el middleware se ejecutó', function () { pm.expect(pm.response.text()).to.eql(''); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "HEAD",
+            "header": [],
+            "url": "{{baseUrl}}/api/stats",
+            "description": "HEAD ejecuta el middleware de autenticación y devuelve el 401, pero sin el mensaje de error."
+          }
+        }
+      ]
+    }
+  ]
+}
